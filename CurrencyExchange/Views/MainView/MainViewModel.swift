@@ -17,5 +17,11 @@ final class MainViewModel: ObservableObject {
     
     var base: String = "USD"
     
-    
+    init() {
+        currencies = [
+          "AED": "United Arab Emirates Dirham",
+          "AFN": "Afghan Afghani",
+          "ALL": "Albanian Lek"
+        ]
+    }
 }

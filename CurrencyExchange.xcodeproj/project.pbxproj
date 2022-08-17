@@ -23,6 +23,7 @@
 		F09720B628ACE2F7003D910E /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F09720B528ACE2F7003D910E /* ErrorResponse.swift */; };
 		F09720B928ACE955003D910E /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F09720B828ACE955003D910E /* APIClient.swift */; };
 		F09720BC28AD1805003D910E /* CurrencyItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F09720BB28AD1805003D910E /* CurrencyItem.swift */; };
+		F09720C028AD4BCF003D910E /* CircularProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F09720BF28AD4BCF003D910E /* CircularProgressView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		F09720B528ACE2F7003D910E /* ErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponse.swift; sourceTree = "<group>"; };
 		F09720B828ACE955003D910E /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		F09720BB28AD1805003D910E /* CurrencyItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyItem.swift; sourceTree = "<group>"; };
+		F09720BF28AD4BCF003D910E /* CircularProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +189,7 @@
 			isa = PBXGroup;
 			children = (
 				F09720BB28AD1805003D910E /* CurrencyItem.swift */,
+				F09720BF28AD4BCF003D910E /* CircularProgressView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -350,6 +353,7 @@
 				F09720A528ACDB03003D910E /* MainView.swift in Sources */,
 				F097207F28ACDA67003D910E /* CurrencyExchange.xcdatamodeld in Sources */,
 				F09720AC28ACDE9E003D910E /* Currency.swift in Sources */,
+				F09720C028AD4BCF003D910E /* CircularProgressView.swift in Sources */,
 				F09720A728ACDB0C003D910E /* MainViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

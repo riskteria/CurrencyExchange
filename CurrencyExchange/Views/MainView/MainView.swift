@@ -11,7 +11,37 @@ struct MainView: View {
     let viewModel: MainViewModel
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView {
+            ZStack {
+                ScrollView {
+                    VStack(alignment: .leading) {
+                        HStack(spacing: 16) {
+                            CircularProgressView(
+                                progress: 0.25,
+                                    maxMinutes: 30
+                                )
+                                .frame(width: 30, height: 30, alignment: .leading)
+                            Text("Last updated on")
+                                .font(.system(size: 14))
+                                .foregroundColor(.gray)
+                        }
+                        LazyVStack(alignment: .leading) {
+                            ForEach(viewModel.currencies.sorted(by: >), id: \.key) { key, value in
+                                VStack {
+                                    NavigationLink {
+                                        Text("Item At \(key)")
+                                    } label: {
+                                        Text(value)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .padding(16)
+                }
+            }
+            .navigationTitle("Convert")
+        }
     }
 }
 
