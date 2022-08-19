@@ -15,6 +15,8 @@ final class MainViewModel: ObservableObject {
     
     // MARK: - Public Properties
     
+    @Published var shouldFetchRemoteData = true
+    
     @Published var currencies: [String: String] = [:]
     
     @Published var rates: [String: Double] = [:]
@@ -42,6 +44,10 @@ final class MainViewModel: ObservableObject {
     }
     
     func fetchDataFromRemote() async {
+        if !shouldFetchRemoteData {
+            return
+        }
+        
         do {
             isFetching = true
             
@@ -60,6 +66,7 @@ final class MainViewModel: ObservableObject {
                 
                 DispatchQueue.main.async {
                     self.currencyRates.append(currencyRate)
+                    self.shouldFetchRemoteData = false
                 }
             }
             
