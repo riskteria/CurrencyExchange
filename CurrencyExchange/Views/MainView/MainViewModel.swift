@@ -9,19 +9,66 @@ import Foundation
 import Combine
 
 final class MainViewModel: ObservableObject {
-    var currencies: [String: String] = [:]
+    // MARK: - Private Properties
     
-    var rates: [String: Float] = [:]
+    private let currencyAPI = CurrencyAPI()
     
-    var lastUpdateTime: TimeInterval = 0
+    // MARK: - Public Properties
     
-    var base: String = "USD"
+    @Published var currencies: [String: String] = [:]
+    
+    @Published var rates: [String: Double] = [:]
+    
+    @Published var currencyRates: [CurrencyRate] = []
+    
+    @Published var lastUpdateTime: TimeInterval = 0
+    
+    @Published var base: String = "USD"
+    
+    @Published var isFetching = false
     
     init() {
-        currencies = [
-          "AED": "United Arab Emirates Dirham",
-          "AFN": "Afghan Afghani",
-          "ALL": "Albanian Lek"
-        ]
+        for (code, name) in currencies {
+            let rate = rates[code] ?? 0
+            
+            let currencyRate = CurrencyRate(
+                code: code,
+                name: name,
+                value: rate
+            )
+            
+            currencyRates.append(currencyRate)
+        }
+    }
+    
+    func fetchDataFromRemote() async {
+        do {
+            isFetching = true
+            
+            let currencyRates = try await currencyAPI.fetchLatest()
+            let rates = currencyRates?.rates ?? [:]
+            let currencies = try await currencyAPI.fetchCurrencies() ?? [:]
+            
+            for (code, name) in currencies {
+                let rate = rates[code] ?? 0
+                
+                let currencyRate = CurrencyRate(
+                    code: code,
+                    name: name,
+                    value: rate
+                )
+                
+                DispatchQueue.main.async {
+                    self.currencyRates.append(currencyRate)
+                }
+            }
+            
+        } catch {
+            print("Errorx: ", error.localizedDescription)
+        }
+        
+        DispatchQueue.main.async {
+            self.isFetching = false
+        }
     }
 }

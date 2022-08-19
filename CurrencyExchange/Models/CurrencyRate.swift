@@ -7,6 +7,8 @@
 
 import Foundation
 
-struct Currency: Decodable {
-    
+struct CurrencyRate: Hashable {
+    let code: String
+    let name: String
+    let value: Double
 }

@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct Response: Decodable {
+struct CurrencyRates: Decodable {
     let disclaimer: String?
     let license: String?
     let timestamp: TimeInterval?
     let base: String?
-    let rates: [String: Float]
+    let rates: [String: Double]?
 }
