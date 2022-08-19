@@ -49,7 +49,7 @@ struct MainView: View {
             }
             .onAppear(perform: {
                 Task {
-                    await viewModel.fetchDataFromRemote()
+                    await viewModel.fetchData()
                 }
             })
             .navigationTitle("Convert")

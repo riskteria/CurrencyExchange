@@ -50,7 +50,7 @@ struct CurrencyCardView: View {
 
 struct CurrencyView_Previews: PreviewProvider {
     static var previews: some View {
-        let currencyRate = CurrencyRate(code: "USD", name: "American Dollar", value: 1)
+        let currencyRate = CurrencyRate(code: "USD", name: "American Dollar", rate: 1)
         CurrencyCardView(currencyRate: currencyRate)
     }
 }

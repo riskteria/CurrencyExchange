@@ -10,5 +10,5 @@ import Foundation
 struct CurrencyRate: Hashable {
     let code: String
     let name: String
-    let value: Double
+    let rate: Double
 }

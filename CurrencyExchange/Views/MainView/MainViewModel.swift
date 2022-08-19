@@ -15,32 +15,18 @@ final class MainViewModel: ObservableObject {
     
     // MARK: - Public Properties
     
-    @Published var shouldFetchRemoteData = true
-    
-    @Published var currencies: [String: String] = [:]
-    
-    @Published var rates: [String: Double] = [:]
-    
-    @Published var currencyRates: [CurrencyRate] = []
+    @Published var currencies: [CurrencyRate] = []
     
     @Published var lastUpdateTime: TimeInterval = 0
     
-    @Published var base: String = "USD"
+    @Published var base = "USD"
+    
+    @Published var shouldFetchRemoteData = true
     
     @Published var isFetching = false
     
-    init() {
-        for (code, name) in currencies {
-            let rate = rates[code] ?? 0
-            
-            let currencyRate = CurrencyRate(
-                code: code,
-                name: name,
-                value: rate
-            )
-            
-            currencyRates.append(currencyRate)
-        }
+    func fetchData() async {
+        await fetchDataFromRemote()
     }
     
     func fetchDataFromRemote() async {
@@ -61,21 +47,31 @@ final class MainViewModel: ObservableObject {
                 let currencyRate = CurrencyRate(
                     code: code,
                     name: name,
-                    value: rate
+                    rate: rate
                 )
                 
                 DispatchQueue.main.async {
-                    self.currencyRates.append(currencyRate)
+                    self.currencies.append(currencyRate)
                     self.shouldFetchRemoteData = false
                 }
             }
             
         } catch {
-            print("Errorx: ", error.localizedDescription)
+            print(error.localizedDescription)
         }
         
         DispatchQueue.main.async {
             self.isFetching = false
         }
+    }
+    
+    func fetchDataFromLocal() async {
+        
+    }
+}
+
+private extension MainViewModel {
+    func storeToLocalData() {
+        
     }
 }
