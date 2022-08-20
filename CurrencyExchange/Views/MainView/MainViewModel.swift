@@ -5,6 +5,7 @@
 //  Created by Rizky Hasibuan on 17/08/22.
 //
 
+import CoreData
 import Foundation
 import Combine
 
@@ -13,9 +14,13 @@ final class MainViewModel: ObservableObject {
     
     private let currencyAPI = CurrencyAPI()
     
+    private let persistanceController = PersistenceController.shared
+    
     // MARK: - Public Properties
     
-    @Published var currencies: [CurrencyRate] = []
+    @Published var currentValue = ""
+    
+    @Published var currencyRates: [CurrencyRate] = []
     
     @Published var lastUpdateTime: TimeInterval = 0
     
@@ -23,22 +28,49 @@ final class MainViewModel: ObservableObject {
     
     @Published var shouldFetchRemoteData = true
     
-    @Published var isFetching = false
+    @Published var isFetching = true
     
-    func fetchData() async {
-        await fetchDataFromRemote()
+    @Published var isCurrencySelectionModalActive = false
+    
+    var formatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter
     }
     
-    func fetchDataFromRemote() async {
-        if !shouldFetchRemoteData {
-            return
+    func fetchData() async {
+        if shouldFetchRemoteData {
+            await fetchDataFromRemote()
+        } else {
+            await fetchDataFromLocal()
         }
+    }
+    
+    func toggleCurrencySelectionModal() {
+        isCurrencySelectionModalActive.toggle()
+    }
+    
+    func onFieldSubmitted() {
         
+    }
+    
+    func filterNumbersFromField(value: String) {
+        print("valuex: ", value)
+        if value.isNumber {
+            currentValue = value
+        }
+    }
+}
+
+// MARK: - Private Extensions
+
+private extension MainViewModel {
+    func fetchDataFromRemote() async {
         do {
             isFetching = true
             
-            let currencyRates = try await currencyAPI.fetchLatest()
-            let rates = currencyRates?.rates ?? [:]
+            let latestRates = try await currencyAPI.fetchLatest()
+            let rates = latestRates?.rates ?? [:]
             let currencies = try await currencyAPI.fetchCurrencies() ?? [:]
             
             for (code, name) in currencies {
@@ -51,7 +83,7 @@ final class MainViewModel: ObservableObject {
                 )
                 
                 DispatchQueue.main.async {
-                    self.currencies.append(currencyRate)
+                    self.currencyRates.append(currencyRate)
                     self.shouldFetchRemoteData = false
                 }
             }
@@ -68,9 +100,7 @@ final class MainViewModel: ObservableObject {
     func fetchDataFromLocal() async {
         
     }
-}
-
-private extension MainViewModel {
+    
     func storeToLocalData() {
         
     }

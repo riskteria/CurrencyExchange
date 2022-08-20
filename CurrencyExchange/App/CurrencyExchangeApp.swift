@@ -9,18 +9,14 @@ import SwiftUI
 
 @main
 struct CurrencyExchangeApp: App {
-    let persistenceController = PersistenceController.shared
-    
     var RootView: some View {
         let viewModel = MainViewModel()
         return MainView(viewModel: viewModel)
-            .environment(\.managedObjectContext, persistenceController.container.viewContext)
     }
 
     var body: some Scene {
         WindowGroup {
             RootView
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }

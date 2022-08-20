@@ -24,6 +24,32 @@ struct MainView: View {
                         .foregroundColor(.gray)
                 }
                 
+                HStack(spacing: 16) {
+                    Button(action: viewModel.toggleCurrencySelectionModal) {
+                        Text("USD")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.primary)
+                        Text("▼")
+                            .font(.system(size: 12))
+                            .foregroundColor(.gray)
+                    }
+                    .sheet(isPresented: $viewModel.isCurrencySelectionModalActive) {
+                        CurrencySelectionView(viewModel: CurrencySelectionViewModel())
+                    }
+                    TextField("0.Ω00", text: $viewModel.currentValue)
+                        .keyboardType(.decimalPad)
+                        .onReceive(viewModel.$currentValue, perform: viewModel.filterNumbersFromField)
+                }
+                .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                .background(Color("LightColor"))
+                .cornerRadius(10)
+                .shadow(
+                    color: .gray.opacity(0.1),
+                    radius: 10,
+                    x: 0,
+                    y: 10
+                )
+                
                 LazyVStack(alignment: .leading) {
                     ForEach(viewModel.currencyRates, id: \.self) { currencyRate in
                         NavigationLink {

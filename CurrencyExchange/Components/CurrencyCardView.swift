@@ -23,7 +23,7 @@ struct CurrencyCardView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             
             VStack(alignment: .trailing) {
-                Text(String(currencyRate.value))
+                Text(String(currencyRate.rate))
                     .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.white)
             }
