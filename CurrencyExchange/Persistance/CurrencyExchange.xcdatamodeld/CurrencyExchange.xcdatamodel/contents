@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="CurrencyEntity" representedClassName="CurrencyEntity" syncable="YES" codeGenerationType="class">
+    <entity name="CurrencyEntity" representedClassName="CurrencyEntity" syncable="YES">
         <attribute name="code" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="rate" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="show" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
     </entity>
-    <entity name="DisplayCurrencyEntity" representedClassName="DisplayCurrencyEntity" syncable="YES" codeGenerationType="class"/>
-    <entity name="LatestRateEntity" representedClassName="LatestRateEntity" syncable="YES" codeGenerationType="class">
+    <entity name="LatestRateEntity" representedClassName="LatestRateEntity" syncable="YES">
         <attribute name="base" optional="YES" attributeType="String"/>
-        <attribute name="rates" optional="YES"/>
+        <attribute name="rates" optional="YES" attributeType="Transformable"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
-    <entity name="RateEntity" representedClassName="RateEntity" syncable="YES" codeGenerationType="class"/>
     <elements>
-        <element name="CurrencyEntity" positionX="-63" positionY="-18" width="128" height="74"/>
-        <element name="DisplayCurrencyEntity" positionX="-27" positionY="36" width="128" height="29"/>
+        <element name="CurrencyEntity" positionX="-63" positionY="-18" width="128" height="89"/>
         <element name="LatestRateEntity" positionX="-54" positionY="-9" width="128" height="74"/>
-        <element name="RateEntity" positionX="-36" positionY="18" width="128" height="29"/>
     </elements>
 </model>
