@@ -40,7 +40,8 @@ struct MainView: View {
                 }
                 .sheet(isPresented: $viewModel.isCurrencySelectionModalActive) {
                     CurrencySelectionView(
-                        currencies: viewModel.currencies
+                        baseCurrency: $viewModel.baseCurrency,
+                        currencies: $viewModel.currencies
                     )
                 }
                 TextField("0.00", value: $viewModel.baseValue, formatter: viewModel.currencyFormatter)

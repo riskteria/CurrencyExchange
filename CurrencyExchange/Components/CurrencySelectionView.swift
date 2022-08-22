@@ -10,13 +10,18 @@ import SwiftUI
 struct CurrencySelectionView: View {
     @Environment(\.presentationMode) var presentationMode
     
-    let currencies: [CurrencyEntity]
+    @Binding var baseCurrency: String
+    
+    @Binding var currencies: [CurrencyEntity]
     
     var body: some View {
         NavigationView {
             List {
                 ForEach(currencies, id: \.code) { currency in
                     CurrencyItemView(currency: currency)
+                        .onTapGesture {
+                            self.selectAndDismiss(from: currency)
+                        }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -30,11 +35,18 @@ struct CurrencySelectionView: View {
             }
         }
     }
+    
+    private func selectAndDismiss(from currency: CurrencyEntity) {
+        baseCurrency = currency.code ?? "USD"
+        presentationMode.wrappedValue.dismiss()
+    }
 }
 
 struct InputView_Previews: PreviewProvider {
     static var previews: some View {
-        let currencies: [CurrencyEntity] = []
-        CurrencySelectionView(currencies: currencies)
+        CurrencySelectionView(
+            baseCurrency: .constant(""),
+            currencies: .constant([])
+        )
     }
 }

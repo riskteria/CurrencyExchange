@@ -111,7 +111,7 @@ private extension MainViewModel {
         let expiryMinutes = TimeInterval(30 * 60)
         let currentDate = Date()
         
-        if date.addingTimeInterval(expiryMinutes) >= currentDate {
+        if date.addingTimeInterval(expiryMinutes) <= currentDate {
             return true
         }
         
@@ -143,20 +143,13 @@ private extension MainViewModel {
             
             let latestRate = try context.fetch(request)
 
-            guard let latestFetchDate = latestRate.first?.timestamp
+            guard let latestFetchDate = latestRate.first?.timestamp,
+                  isExpired(date: latestFetchDate)
             else {
-                return true
+                return false
             }
             
-            if isExpired(date: latestFetchDate) {
-                Task {
-                    await fetchRemoteRates()
-                }
-                
-                return true
-            }
-            
-            return false
+            return true
             
         } catch {
             return true
@@ -176,7 +169,7 @@ private extension MainViewModel {
             let request = LatestRateEntity.fetchRequest()
             let count = try context.count(for: request)
             
-            let timestamp = Date(timeIntervalSince1970: latestRates?.timestamp ?? Date().timeIntervalSince1970)
+            let timestamp = Date()
             
             if count == 0 {
                 let entity = LatestRateEntity(context: context)
