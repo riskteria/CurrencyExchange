@@ -39,9 +39,11 @@ struct MainView: View {
                         .foregroundColor(.gray)
                 }
                 .sheet(isPresented: $viewModel.isCurrencySelectionModalActive) {
-                    CurrencySelectionView(viewModel: CurrencySelectionViewModel())
+                    CurrencySelectionView(
+                        currencies: viewModel.currencies
+                    )
                 }
-                TextField("0.Ω00", text: $viewModel.baseValue)
+                TextField("0.00", value: $viewModel.baseValue, formatter: viewModel.currencyFormatter)
                     .keyboardType(.decimalPad)
             }
             .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))

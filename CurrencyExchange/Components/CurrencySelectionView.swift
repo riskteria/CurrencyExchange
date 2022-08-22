@@ -10,12 +10,12 @@ import SwiftUI
 struct CurrencySelectionView: View {
     @Environment(\.presentationMode) var presentationMode
     
-    @ObservedObject var viewModel: CurrencySelectionViewModel
+    let currencies: [CurrencyEntity]
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(viewModel.currencies, id: \.code) { currency in
+                ForEach(currencies, id: \.code) { currency in
                     CurrencyItemView(currency: currency)
                 }
             }
@@ -29,17 +29,12 @@ struct CurrencySelectionView: View {
                 }
             }
         }
-        .onAppear {
-            Task {
-                await viewModel.fetchLocalCurrencies()
-            }
-        }
     }
 }
 
 struct InputView_Previews: PreviewProvider {
     static var previews: some View {
-        let viewModel = CurrencySelectionViewModel()
-        CurrencySelectionView(viewModel: viewModel)
+        let currencies: [CurrencyEntity] = []
+        CurrencySelectionView(currencies: currencies)
     }
 }

@@ -31,11 +31,17 @@ final class MainViewModel: ObservableObject {
     
     @Published var baseCurrency = "USD"
     
-    @Published var baseValue = ""
+    @Published var baseValue = "1"
     
     @Published var isFetching = true
     
     @Published var isCurrencySelectionModalActive = false
+    
+    var currencyFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        return formatter
+    }()
     
     init() {
         setupSubscribers()
@@ -89,12 +95,15 @@ private extension MainViewModel {
     }
     
     func mapCurrencies(currencyRates: [Currency], currencies: [CurrencyEntity], rates: [String: Double]) -> [Currency] {
-        return currencies.map {
-            Currency(
-                code: $0.code ?? "",
-                name: $0.name ?? "",
-                rate: rates[$0.code ?? ""] ?? 0
-            )
+        return currencies.compactMap { currency in
+            if currency.show {
+                return Currency(
+                    code: currency.code ?? "",
+                    name: currency.name ?? "",
+                    rate: rates[currency.code ?? ""] ?? 0
+                )
+            }
+            return nil
         }
     }
     
@@ -231,7 +240,7 @@ private extension MainViewModel {
         
         let context = persistanceController.container.viewContext
         let request = CurrencyEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "show == %d", true)
+        request.sortDescriptors = [NSSortDescriptor(key: "code", ascending: true)]
         
         do {
             let currencies = try context.fetch(request)
