@@ -21,7 +21,6 @@ final class CurrencyAPI: CurrencyAPIInterface {
     private func fetch<D: Decodable>(for request: URLRequest) async throws -> D {
         let (data, response) = try await session.data(for: request)
         try filterHttpStatusCode(from: response)
-        print("datax: ", String(decoding: data, as: UTF8.self))
         return try decoder.decode(D.self, from: data)
     }
     

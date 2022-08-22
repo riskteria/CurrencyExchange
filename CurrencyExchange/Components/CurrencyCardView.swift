@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CurrencyCardView: View {
-    let currencyRate: CurrencyRate
+    let currencyRate: Currency
     
     var body: some View {
         HStack {
@@ -23,7 +23,7 @@ struct CurrencyCardView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             
             VStack(alignment: .trailing) {
-                Text(String(currencyRate.rate))
+                Text(currencyRate.rate.toString())
                     .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.white)
             }
@@ -50,7 +50,7 @@ struct CurrencyCardView: View {
 
 struct CurrencyView_Previews: PreviewProvider {
     static var previews: some View {
-        let currencyRate = CurrencyRate(code: "USD", name: "American Dollar", rate: 1)
+        let currencyRate = Currency(code: "USD", name: "American Dollar", rate: 1)
         CurrencyCardView(currencyRate: currencyRate)
     }
 }

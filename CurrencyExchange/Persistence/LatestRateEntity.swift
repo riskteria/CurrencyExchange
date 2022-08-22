@@ -1,5 +1,5 @@
 //
-//  LatestRateEntity+CoreDataProperties.swift
+//  LatestRateEntity+CoreDataClass.swift
 //  CurrencyExchange
 //
 //  Created by Rizky Hasibuan on 20/08/22.
@@ -9,17 +9,15 @@
 import Foundation
 import CoreData
 
-
-extension LatestRateEntity {
-
+@objc(LatestRateEntity)
+final class LatestRateEntity: NSManagedObject {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<LatestRateEntity> {
         return NSFetchRequest<LatestRateEntity>(entityName: "LatestRateEntity")
     }
 
-    @NSManaged public var base: String?
-    @NSManaged public var rates: [String: Double]?
-    @NSManaged public var timestamp: Date?
-
+    @NSManaged var base: String?
+    @NSManaged var rates: [String: Double]?
+    @NSManaged var timestamp: Date?
 }
 
 extension LatestRateEntity : Identifiable {
