@@ -8,10 +8,32 @@
 import SwiftUI
 
 struct CurrencySelectionView: View {
-    let viewModel: CurrencySelectionViewModel
+    @Environment(\.presentationMode) var presentationMode
+    
+    @ObservedObject var viewModel: CurrencySelectionViewModel
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView {
+            List {
+                ForEach(viewModel.currencies, id: \.code) { currency in
+                    CurrencyItemView(currency: currency)
+                }
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Change Currency")
+            .toolbar {
+                ToolbarItem {
+                    Button("Cancel") {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
+            }
+        }
+        .onAppear {
+            Task {
+                await viewModel.fetchLocalCurrencies()
+            }
+        }
     }
 }
 

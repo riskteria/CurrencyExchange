@@ -21,17 +21,17 @@ final class MainViewModel: ObservableObject {
     
     // MARK: - Public Properties
     
-    @Published var currentValue = ""
-    
     @Published var currencies: [CurrencyEntity] = []
     
     @Published var rates: [String: Double] = [:]
     
-    @Published var currenciesRates: [Currency] = []
+    @Published var displayCurrencies: [Currency] = []
     
-    @Published var lastUpdateTime: TimeInterval = 0
+    @Published var lastUpdateTime = Date()
     
-    @Published var base = "USD"
+    @Published var baseCurrency = "USD"
+    
+    @Published var baseValue = ""
     
     @Published var isFetching = true
     
@@ -61,7 +61,7 @@ final class MainViewModel: ObservableObject {
     
     func filterNumbersFromField(value: String) {
         if value.isNumber {
-            currentValue = value
+            baseValue = value
         }
     }
     
@@ -78,11 +78,11 @@ final class MainViewModel: ObservableObject {
 
 private extension MainViewModel {
     func setupSubscribers() {
-        $currenciesRates
+        $displayCurrencies
             .combineLatest($currencies, $rates)
             .map(mapCurrencies)
             .sink { currencyRates in
-                self.currenciesRates = currencyRates
+                self.displayCurrencies = currencyRates
             }
             .store(in: &cancellables)
             
@@ -96,6 +96,17 @@ private extension MainViewModel {
                 rate: rates[$0.code ?? ""] ?? 0
             )
         }
+    }
+    
+    func isExpired(date: Date) -> Bool {
+        let expiryMinutes = TimeInterval(30 * 60)
+        let currentDate = Date()
+        
+        if date.addingTimeInterval(expiryMinutes) >= currentDate {
+            return true
+        }
+        
+        return false
     }
     
     func shouldFetchCurrencyFromRemote() -> Bool {
@@ -116,14 +127,37 @@ private extension MainViewModel {
         
         do {
             let count = try context.count(for: request)
-            return count == 0
+            
+            if count == 0 {
+                return true
+            }
+            
+            let latestRate = try context.fetch(request)
+
+            guard let latestFetchDate = latestRate.first?.timestamp
+            else {
+                return true
+            }
+            
+            if isExpired(date: latestFetchDate) {
+                Task {
+                    await fetchRemoteRates()
+                }
+                
+                return true
+            }
+            
+            return false
+            
         } catch {
             return true
         }
     }
     
     func fetchRemoteRates() async {
-        isFetching = true
+        DispatchQueue.main.async { [weak self] in
+            self?.isFetching = true
+        }
         
         do {
             
@@ -145,13 +179,16 @@ private extension MainViewModel {
                 entity?.timestamp = timestamp
                 entity?.rates = latestRates?.rates
             }
+            
             try context.save()
+            
+            await fetchLocalRates()
         } catch {
             print("error: ", error.localizedDescription)
         }
         
-        DispatchQueue.main.async {
-            self.isFetching = false
+        DispatchQueue.main.async { [weak self] in
+            self?.isFetching = false
         }
     }
     
@@ -166,10 +203,18 @@ private extension MainViewModel {
                 let entity = CurrencyEntity(context: context)
                 entity.code = code
                 entity.name = name
-                entity.show = true
+                
+                switch code {
+                case "JPY", "IDR":
+                    entity.show = true
+                default:
+                    entity.show = false
+                }
             }
             
             try context.save()
+            
+            await fetchLocalCurrencies()
         } catch {
             print("error: ", error.localizedDescription)
         }
@@ -180,38 +225,53 @@ private extension MainViewModel {
     }
     
     func fetchLocalCurrencies() async {
-        isFetching = true
+        DispatchQueue.main.async { [weak self] in
+            self?.isFetching = true
+        }
         
         let context = persistanceController.container.viewContext
         let request = CurrencyEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         request.predicate = NSPredicate(format: "show == %d", true)
         
         do {
             let currencies = try context.fetch(request)
-            self.currencies = currencies
+            DispatchQueue.main.async { [weak self] in
+                self?.currencies = currencies
+            }
         } catch {
             print("error: ", error.localizedDescription)
         }
         
-        isFetching = false
+        DispatchQueue.main.async { [weak self] in
+            self?.isFetching = false
+        }
     }
     
     func fetchLocalRates() async {
-        isFetching = true
+        DispatchQueue.main.async { [weak self] in
+            self?.isFetching = true
+        }
         
         let context = persistanceController.container.viewContext
         let request = LatestRateEntity.fetchRequest()
         
         do {
             let latestRate = try context.fetch(request)
-            let rates = latestRate.first?.rates
+            let rates = latestRate.first?.rates ?? [:]
+            let timestamp = latestRate.first?.timestamp ?? Date()
+            let baseCurrency = latestRate.first?.base ?? "USD"
             
-            self.rates = rates ?? [:]
+            DispatchQueue.main.async {
+                self.baseCurrency = baseCurrency
+                self.lastUpdateTime = timestamp
+                self.rates = rates
+            }
         } catch {
             print("error: ", error.localizedDescription)
         }
         
-        isFetching = false
+        DispatchQueue.main.async { [weak self] in
+            self?.isFetching = false
+        }
     }
 }

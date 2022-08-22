@@ -18,14 +18,20 @@ struct MainView: View {
                         maxMinutes: 30
                     )
                     .frame(width: 30, height: 30, alignment: .leading)
-                Text("Last updated on")
-                    .font(.system(size: 14))
-                    .foregroundColor(.gray)
+                HStack {
+                    Text("Last updated on")
+                        .font(.system(size: 12))
+                        .foregroundColor(.gray)
+                    
+                    Text(viewModel.lastUpdateTime.dateAndTimetoString())
+                        .font(.system(size: 12))
+                        .foregroundColor(.gray)
+                }
             }
             
             HStack(spacing: 16) {
                 Button(action: viewModel.toggleCurrencySelectionModal) {
-                    Text("USD")
+                    Text(viewModel.baseCurrency)
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(.primary)
                     Text("▼")
@@ -35,9 +41,8 @@ struct MainView: View {
                 .sheet(isPresented: $viewModel.isCurrencySelectionModalActive) {
                     CurrencySelectionView(viewModel: CurrencySelectionViewModel())
                 }
-                TextField("0.Ω00", text: $viewModel.currentValue)
+                TextField("0.Ω00", text: $viewModel.baseValue)
                     .keyboardType(.decimalPad)
-                    .onReceive(viewModel.$currentValue, perform: viewModel.filterNumbersFromField)
             }
             .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
             .background(Color("LightColor"))
@@ -62,11 +67,11 @@ struct MainView: View {
         ScrollView {
             VStack(alignment: .leading) {
                 LazyVStack(alignment: .leading) {
-                    ForEach(viewModel.currenciesRates, id: \.self) { currencyRate in
+                    ForEach(viewModel.displayCurrencies, id: \.self) { currency in
                         NavigationLink {
-                            Text("Item At \(currencyRate.code)")
+                            Text("Item At \(currency.code)")
                         } label: {
-                            CurrencyCardView(currencyRate: currencyRate)
+                            CurrencyRateCardView(currency: currency)
                         }
                     }
                 }

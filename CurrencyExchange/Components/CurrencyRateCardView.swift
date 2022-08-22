@@ -1,5 +1,5 @@
 //
-//  CurrencyItem.swift
+//  CurrencyRateCardView.swift
 //  CurrencyExchange
 //
 //  Created by Rizky Hasibuan on 17/08/22.
@@ -7,23 +7,24 @@
 
 import SwiftUI
 
-struct CurrencyCardView: View {
-    let currencyRate: Currency
+struct CurrencyRateCardView: View {
+    let currency: Currency
     
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                Text(currencyRate.code)
+                Text(currency.code)
                     .font(.system(size: 16, weight: .bold))
                     .foregroundColor(.white)
-                Text(currencyRate.name)
+                Text(currency.name)
                     .font(.system(size: 12))
                     .foregroundColor(.white.opacity(0.8))
+                    .lineLimit(1)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             
             VStack(alignment: .trailing) {
-                Text(currencyRate.rate.toString())
+                Text(currency.rate.toString())
                     .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.white)
             }
@@ -51,6 +52,6 @@ struct CurrencyCardView: View {
 struct CurrencyView_Previews: PreviewProvider {
     static var previews: some View {
         let currencyRate = Currency(code: "USD", name: "American Dollar", rate: 1)
-        CurrencyCardView(currencyRate: currencyRate)
+        CurrencyRateCardView(currency: currencyRate)
     }
 }
