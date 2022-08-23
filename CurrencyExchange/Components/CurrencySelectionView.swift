@@ -10,7 +10,12 @@ import SwiftUI
 struct CurrencySelectionView: View {
     @Environment(\.presentationMode) var presentationMode
     
-    @Binding var baseCurrency: String
+    enum SelectionType {
+        case single
+        case multiple
+    }
+    
+    let selection: SelectionType
     
     @Binding var currencies: [CurrencyEntity]
     
@@ -37,16 +42,6 @@ struct CurrencySelectionView: View {
     }
     
     private func selectAndDismiss(from currency: CurrencyEntity) {
-        baseCurrency = currency.code ?? "USD"
         presentationMode.wrappedValue.dismiss()
-    }
-}
-
-struct InputView_Previews: PreviewProvider {
-    static var previews: some View {
-        CurrencySelectionView(
-            baseCurrency: .constant(""),
-            currencies: .constant([])
-        )
     }
 }

@@ -42,12 +42,14 @@ struct MainView: View {
                 }
                 .sheet(isPresented: $viewModel.isCurrencySelectionModalActive) {
                     CurrencySelectionView(
-                        baseCurrency: $viewModel.baseCurrency,
+                        selection: .single,
                         currencies: $viewModel.currencies
                     )
                 }
-                TextField("0.00", value: $viewModel.baseValue, formatter: viewModel.currencyFormatter)
+                TextField("0.00", text: $viewModel.baseValue)
+                    .padding(.horizontal)
                     .keyboardType(.decimalPad)
+                    .multilineTextAlignment(.trailing)
             }
             .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
             .background(Color("LightColor"))
@@ -93,7 +95,13 @@ struct MainView: View {
                     }
                     .toolbar {
                         ToolbarItem {
-                            Button("Add", action: viewModel.addCurrency)
+                            Button("Add", action: viewModel.toggleCurrencySelectionModal)
+                                .sheet(isPresented: $viewModel.isCurrencySelectionModalActive) {
+                                    CurrencySelectionView(
+                                        selection: .multiple,
+                                        currencies: $viewModel.currencies
+                                    )
+                                }
                         }
                     }
                 }
