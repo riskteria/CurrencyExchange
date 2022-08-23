@@ -14,10 +14,11 @@ struct MainView: View {
         VStack(alignment: .leading) {
             HStack(spacing: 16) {
                 CircularProgressView(
-                    progress: 0.25,
-                        maxMinutes: 30
-                    )
-                    .frame(width: 30, height: 30, alignment: .leading)
+                    expires: viewModel.lastUpdateTime,
+                    expiredDuration: viewModel.expiredDuration
+                )
+                .frame(width: 30, height: 30, alignment: .leading)
+                
                 HStack {
                     Text("Last updated on")
                         .font(.system(size: 12))
@@ -71,11 +72,7 @@ struct MainView: View {
             VStack(alignment: .leading) {
                 LazyVStack(alignment: .leading) {
                     ForEach(viewModel.displayCurrencies, id: \.self) { currency in
-                        NavigationLink {
-                            Text("Item At \(currency.code)")
-                        } label: {
-                            CurrencyRateCardView(currency: currency)
-                        }
+                        CurrencyRateCardView(currency: currency)
                     }
                 }
             }
@@ -96,7 +93,6 @@ struct MainView: View {
                     .toolbar {
                         ToolbarItem {
                             Button("Add", action: viewModel.addCurrency)
-
                         }
                     }
                 }

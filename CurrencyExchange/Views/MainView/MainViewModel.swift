@@ -27,6 +27,8 @@ final class MainViewModel: ObservableObject {
     
     @Published var displayCurrencies: [Currency] = []
     
+    @Published var expiredDuration: TimeInterval = 30 * 60
+    
     @Published var lastUpdateTime = Date()
     
     @Published var baseCurrency = "USD"
@@ -108,10 +110,9 @@ private extension MainViewModel {
     }
     
     func isExpired(date: Date) -> Bool {
-        let expiryMinutes = TimeInterval(30 * 60)
         let currentDate = Date()
         
-        if date.addingTimeInterval(expiryMinutes) <= currentDate {
+        if date.addingTimeInterval(expiredDuration) <= currentDate {
             return true
         }
         

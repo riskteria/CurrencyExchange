@@ -8,12 +8,17 @@
 import SwiftUI
 
 struct CircularProgressView: View {
-    let progress: TimeInterval
-    let maxMinutes: TimeInterval
+    // MARK: - Private Properties
+    
+    private let currentDate = Date()
+    
+    // MARK: - Public Properties
+    
+    let expires: Date
+    
+    let expiredDuration: TimeInterval
     
     var body: some View {
-        let remainingMinutes = Int(maxMinutes * progress)
-        
         ZStack {
             Circle()
                 .stroke(
@@ -21,7 +26,7 @@ struct CircularProgressView: View {
                     lineWidth: 3
                 )
             Circle()
-                .trim(from: 0, to: progress)
+                .trim(from: 0, to: progress())
                 .stroke(
                     Color.pink,
                     style: StrokeStyle(
@@ -30,9 +35,9 @@ struct CircularProgressView: View {
                     )
                 )
                 .rotationEffect(.degrees(-90))
-                .animation(.easeOut, value: progress)
+                .animation(.easeOut, value: progress())
             
-            Text("\(String(remainingMinutes))m")
+            Text("\(String(remainingMinutes()))m")
                 .font(.system(size: 10))
 
         }
@@ -40,8 +45,22 @@ struct CircularProgressView: View {
     }
 }
 
-struct CircularProgressView_Previews: PreviewProvider {
-    static var previews: some View {
-        CircularProgressView(progress: 0.25, maxMinutes: 30)
+private extension CircularProgressView {
+    func remainingInterval() -> TimeInterval {
+        let interval = expires.timeIntervalSince1970 - currentDate.timeIntervalSince1970 + expiredDuration
+        
+        return interval
+    }
+    
+    func remainingMinutes() -> Int {
+        let interval = remainingInterval()
+        let minutesInHour = 60
+        let secondsInMinutes = 60
+        let minutes = Int(interval) / secondsInMinutes % minutesInHour
+        return Int(minutes)
+    }
+    
+    func progress() -> Double {
+        return Double(expiredDuration - remainingInterval()) / expiredDuration
     }
 }
