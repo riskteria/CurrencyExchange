@@ -8,9 +8,6 @@
 import SwiftUI
 
 struct CurrencySelectionView: View {
-    // MARK: - Private Properties
-    @State private var selectedCurrencies: [String: Bool] = [:]
-    
     // MARK: - Public Properties
     
     @Environment(\.presentationMode) var presentationMode
@@ -23,6 +20,10 @@ struct CurrencySelectionView: View {
     let selection: SelectionType
     
     @Binding var currencies: [CurrencyEntity]
+    
+    @Binding var selected: [String: Bool]
+    
+    @State private var currentSelected: [String: Bool] = [:]
 
     var body: some View {
         NavigationView {
@@ -53,15 +54,16 @@ struct CurrencySelectionView: View {
     }
     
     private func doneHandler() {
+        selected = currentSelected
         presentationMode.wrappedValue.dismiss()
     }
     
     private func isSelected(currency: CurrencyEntity) -> Bool {
         switch selection {
         case .single:
-            return selectedCurrencies[currency.code!] ?? false
+            return currentSelected[currency.code!] ?? false
         case .multiple:
-            return selectedCurrencies[currency.code!] ?? currency.show
+            return currentSelected[currency.code!] ?? currency.show
         }
         
     }
@@ -70,15 +72,13 @@ struct CurrencySelectionView: View {
         guard let code = currency.code else { return }
         
         if selection == .single {
-            selectedCurrencies.removeAll()
+            currentSelected.removeAll()
         }
         
-        if selectedCurrencies[code] == nil {
-            selectedCurrencies[code] = true
+        if currentSelected[code] == nil {
+            currentSelected[code] = true
         } else {
-            selectedCurrencies[code]?.toggle()
+            currentSelected[code]?.toggle()
         }
-        
-        print(selectedCurrencies)
     }
 }

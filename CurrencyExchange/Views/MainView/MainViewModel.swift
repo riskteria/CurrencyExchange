@@ -31,6 +31,8 @@ final class MainViewModel: ObservableObject {
     
     @Published var lastUpdateTime = Date()
     
+    @Published var selectedCurrencies: [String: Bool] = [:]
+    
     @Published var baseCurrency = "USD"
     
     @Published var baseValue = "1"
@@ -81,6 +83,15 @@ final class MainViewModel: ObservableObject {
         Task {
             await fetchRemoteRates()
         }
+    }
+    
+    func handleSwitchCurrency() {
+        baseCurrency = selectedCurrencies.first?.key ?? "USD"
+        selectedCurrencies.removeAll()
+    }
+    
+    func handleAddCurrencies() {
+        
     }
 }
 

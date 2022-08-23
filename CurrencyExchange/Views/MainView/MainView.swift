@@ -42,10 +42,11 @@ struct MainView: View {
                         .font(.system(size: 12))
                         .foregroundColor(.gray)
                 }
-                .sheet(isPresented: $viewModel.presentSwitchCurrency) {
+                .sheet(isPresented: $viewModel.presentSwitchCurrency, onDismiss: viewModel.handleSwitchCurrency) {
                     CurrencySelectionView(
                         selection: .single,
-                        currencies: $viewModel.currencies
+                        currencies: $viewModel.currencies,
+                        selected: $viewModel.selectedCurrencies
                     )
                 }
                 TextField("0.00", text: $viewModel.baseValue)
@@ -100,10 +101,11 @@ struct MainView: View {
                             Button("Add") {
                                 viewModel.presentAddCurrency.toggle()
                             }
-                            .sheet(isPresented: $viewModel.presentAddCurrency) {
+                            .sheet(isPresented: $viewModel.presentAddCurrency, onDismiss: viewModel.handleAddCurrencies) {
                                 CurrencySelectionView(
                                     selection: .multiple,
-                                    currencies: $viewModel.currencies
+                                    currencies: $viewModel.currencies,
+                                    selected: $viewModel.selectedCurrencies
                                 )
                             }
                             .foregroundColor(.red)
