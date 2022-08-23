@@ -14,12 +14,13 @@ struct MainView: View {
         VStack(alignment: .leading) {
             HStack(spacing: 16) {
                 CircularProgressView(
-                    expires: viewModel.lastUpdateTime,
-                    expiredDuration: viewModel.expiredDuration
+                    expiredTime: viewModel.lastUpdateTime,
+                    expiryDuration: viewModel.expiredDuration,
+                    onExpired: viewModel.onTimerExpired
                 )
                 .frame(width: 30, height: 30, alignment: .leading)
                 
-                HStack {
+                HStack(spacing: 4) {
                     Text("Last updated on")
                         .font(.system(size: 12))
                         .foregroundColor(.gray)

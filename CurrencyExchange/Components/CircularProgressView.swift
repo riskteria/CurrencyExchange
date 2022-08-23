@@ -10,13 +10,19 @@ import SwiftUI
 struct CircularProgressView: View {
     // MARK: - Private Properties
     
-    private let currentDate = Date()
+    @State private var currentTime = Date()
+    
+    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    
+    private let counter: TimeInterval = 0
     
     // MARK: - Public Properties
     
-    let expires: Date
+    let expiredTime: Date
     
-    let expiredDuration: TimeInterval
+    let expiryDuration: TimeInterval
+    
+    var onExpired: () -> Void
     
     var body: some View {
         ZStack {
@@ -41,13 +47,22 @@ struct CircularProgressView: View {
                 .font(.system(size: 10))
 
         }
-
+        .onReceive(timer) { time in
+            currentTime = time
+            
+            if progress() >= 1 {
+                onExpired()
+            }
+        }
     }
 }
 
 private extension CircularProgressView {
     func remainingInterval() -> TimeInterval {
-        let interval = expires.timeIntervalSince1970 - currentDate.timeIntervalSince1970 + expiredDuration
+        let interval = expiredTime.timeIntervalSince1970 -
+                       currentTime.timeIntervalSince1970 +
+                       expiryDuration +
+                       counter
         
         return interval
     }
@@ -61,6 +76,6 @@ private extension CircularProgressView {
     }
     
     func progress() -> Double {
-        return Double(expiredDuration - remainingInterval()) / expiredDuration
+        return Double(expiryDuration - remainingInterval()) / expiryDuration
     }
 }

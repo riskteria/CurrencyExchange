@@ -80,6 +80,12 @@ final class MainViewModel: ObservableObject {
     func addCurrency() {
         
     }
+    
+    func onTimerExpired() {
+        Task {
+            await fetchRemoteRates()
+        }
+    }
 }
 
 // MARK: - Private Extensions
