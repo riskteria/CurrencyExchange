@@ -75,10 +75,6 @@ final class MainViewModel: ObservableObject {
         
     }
     
-    func addCurrency() {
-        
-    }
-    
     func onTimerExpired() {
         Task {
             await fetchRemoteRates()
@@ -244,7 +240,7 @@ private extension MainViewModel {
                 entity.name = name
                 
                 switch code {
-                case "JPY", "IDR":
+                case "JPY", "IDR", "AFN", "ALL":
                     entity.show = true
                 default:
                     entity.show = false
