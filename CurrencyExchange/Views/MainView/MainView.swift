@@ -98,10 +98,10 @@ struct MainView: View {
                     }
                     .toolbar {
                         ToolbarItem {
-                            Button("Add") {
-                                viewModel.presentAddCurrency.toggle()
+                            Button("Edit") {
+                                viewModel.presentEditCurrency.toggle()
                             }
-                            .sheet(isPresented: $viewModel.presentAddCurrency, onDismiss: viewModel.handleAddCurrencies) {
+                            .sheet(isPresented: $viewModel.presentEditCurrency, onDismiss: viewModel.currenciesEditHandler) {
                                 CurrencySelectionView(
                                     selection: .multiple,
                                     currencies: $viewModel.currencies,

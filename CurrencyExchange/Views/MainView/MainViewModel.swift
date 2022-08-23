@@ -39,7 +39,7 @@ final class MainViewModel: ObservableObject {
     
     @Published var isFetching = true
     
-    @Published var presentAddCurrency = false
+    @Published var presentEditCurrency = false
     
     @Published var presentSwitchCurrency = false
     
@@ -62,7 +62,7 @@ final class MainViewModel: ObservableObject {
     }
     
     func toggleCurrencySelectionModal() {
-        presentAddCurrency.toggle()
+        presentEditCurrency.toggle()
     }
     
     func filterNumbersFromField(value: String) {
@@ -90,8 +90,31 @@ final class MainViewModel: ObservableObject {
         selectedCurrencies.removeAll()
     }
     
-    func handleAddCurrencies() {
-        
+    func currenciesEditHandler() {
+        do {
+            let codes = Array(selectedCurrencies.keys)
+            
+            let context = persistanceController.container.viewContext
+            let request = CurrencyEntity.fetchRequest()
+            
+            let predicase = NSPredicate(format: "code in %@", codes)
+            request.predicate = predicase
+            
+            let currencies = try context.fetch(request)
+            
+            for currency in currencies {
+                currency.show = selectedCurrencies[currency.code!] ?? false
+            }
+            
+            try context.save()
+            
+            Task {
+                await fetchLocalCurrencies()
+            }
+            
+        } catch {
+            print("error: ", error.localizedDescription)
+        }
     }
 }
 
