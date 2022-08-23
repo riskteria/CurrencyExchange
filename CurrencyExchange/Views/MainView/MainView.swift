@@ -32,7 +32,9 @@ struct MainView: View {
             }
             
             HStack(spacing: 16) {
-                Button(action: viewModel.toggleCurrencySelectionModal) {
+                Button {
+                    viewModel.presentSwitchCurrency.toggle()
+                } label: {
                     Text(viewModel.baseCurrency)
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(.primary)
@@ -40,8 +42,9 @@ struct MainView: View {
                         .font(.system(size: 12))
                         .foregroundColor(.gray)
                 }
-                .sheet(isPresented: $viewModel.isCurrencySelectionModalActive) {
+                .sheet(isPresented: $viewModel.presentSwitchCurrency) {
                     CurrencySelectionView(
+                        selection: .single,
                         currencies: $viewModel.currencies
                     )
                 }
@@ -94,13 +97,16 @@ struct MainView: View {
                     }
                     .toolbar {
                         ToolbarItem {
-                            Button("Add", action: viewModel.toggleCurrencySelectionModal)
-                                .sheet(isPresented: $viewModel.isCurrencySelectionModalActive) {
-                                    SwitchCurrencyView(
-                                        currencies: $viewModel.currencies
-                                    )
-                                }
-                                .foregroundColor(.red)
+                            Button("Add") {
+                                viewModel.presentAddCurrency.toggle()
+                            }
+                            .sheet(isPresented: $viewModel.presentAddCurrency) {
+                                CurrencySelectionView(
+                                    selection: .multiple,
+                                    currencies: $viewModel.currencies
+                                )
+                            }
+                            .foregroundColor(.red)
                         }
                     }
                 }

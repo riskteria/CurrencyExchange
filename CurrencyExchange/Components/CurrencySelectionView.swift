@@ -9,12 +9,18 @@ import SwiftUI
 
 struct CurrencySelectionView: View {
     // MARK: - Private Properties
-    
     @State private var selectedCurrencies: [String: Bool] = [:]
     
     // MARK: - Public Properties
     
     @Environment(\.presentationMode) var presentationMode
+    
+    enum SelectionType {
+        case single
+        case multiple
+    }
+    
+    let selection: SelectionType
     
     @Binding var currencies: [CurrencyEntity]
 
@@ -26,7 +32,7 @@ struct CurrencySelectionView: View {
                         handleSelection(currency: currency)
                     }
             }
-            .navigationTitle("Select Currencies")
+            .navigationTitle("Select Currency")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -57,10 +63,16 @@ struct CurrencySelectionView: View {
     private func handleSelection(currency: CurrencyEntity) {
         guard let code = currency.code else { return }
         
+        if selection == .single {
+            selectedCurrencies.removeAll()
+        }
+        
         if selectedCurrencies[code] == nil {
             selectedCurrencies[code] = true
         } else {
             selectedCurrencies[code]?.toggle()
         }
+        
+        print(selectedCurrencies)
     }
 }

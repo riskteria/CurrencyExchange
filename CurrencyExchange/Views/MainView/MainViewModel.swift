@@ -37,7 +37,9 @@ final class MainViewModel: ObservableObject {
     
     @Published var isFetching = true
     
-    @Published var isCurrencySelectionModalActive = false
+    @Published var presentAddCurrency = false
+    
+    @Published var presentSwitchCurrency = false
     
     init() {
         setupSubscribers()
@@ -58,7 +60,7 @@ final class MainViewModel: ObservableObject {
     }
     
     func toggleCurrencySelectionModal() {
-        isCurrencySelectionModalActive.toggle()
+        presentAddCurrency.toggle()
     }
     
     func filterNumbersFromField(value: String) {

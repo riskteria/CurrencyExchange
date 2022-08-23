@@ -28,7 +28,6 @@
 		F0A247A328B11B8D0085381E /* CurrencyExchange.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F0A247A128B11B8C0085381E /* CurrencyExchange.xcdatamodeld */; };
 		F0A247A828B11D140085381E /* LatestRateEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A247A428B11D140085381E /* LatestRateEntity.swift */; };
 		F0A247AA28B11D140085381E /* CurrencyEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A247A628B11D140085381E /* CurrencyEntity.swift */; };
-		F0DBA9B328B5292500CFD52B /* SwitchCurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0DBA9B228B5292500CFD52B /* SwitchCurrencyView.swift */; };
 		F0DFEA7628AE0CE70005CE01 /* ErrorAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0DFEA7528AE0CE70005CE01 /* ErrorAPI.swift */; };
 		F0DFED4928AE67990005CE01 /* CurrencySelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0DFED4828AE67990005CE01 /* CurrencySelectionView.swift */; };
 		F0DFED4B28AE86100005CE01 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0DFED4A28AE86100005CE01 /* Endpoint.swift */; };
@@ -77,7 +76,6 @@
 		F0A247A228B11B8C0085381E /* CurrencyExchange.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CurrencyExchange.xcdatamodel; sourceTree = "<group>"; };
 		F0A247A428B11D140085381E /* LatestRateEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestRateEntity.swift; sourceTree = "<group>"; };
 		F0A247A628B11D140085381E /* CurrencyEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyEntity.swift; sourceTree = "<group>"; };
-		F0DBA9B228B5292500CFD52B /* SwitchCurrencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchCurrencyView.swift; sourceTree = "<group>"; };
 		F0DFEA7528AE0CE70005CE01 /* ErrorAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorAPI.swift; sourceTree = "<group>"; };
 		F0DFED4828AE67990005CE01 /* CurrencySelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectionView.swift; sourceTree = "<group>"; };
 		F0DFED4A28AE86100005CE01 /* Endpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
@@ -231,7 +229,6 @@
 				F09720BF28AD4BCF003D910E /* CircularProgressView.swift */,
 				F047BC8328B3A3A80084056D /* CurrencyItemView.swift */,
 				F0DFED4828AE67990005CE01 /* CurrencySelectionView.swift */,
-				F0DBA9B228B5292500CFD52B /* SwitchCurrencyView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -414,7 +411,6 @@
 				F003CB9A28B0E4A8008FABCB /* String+Extension.swift in Sources */,
 				F0F3C40D28B355350073D063 /* Date+Extension.swift in Sources */,
 				F09720A728ACDB0C003D910E /* MainViewModel.swift in Sources */,
-				F0DBA9B328B5292500CFD52B /* SwitchCurrencyView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
