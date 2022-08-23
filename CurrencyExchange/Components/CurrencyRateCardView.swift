@@ -10,6 +10,8 @@ import SwiftUI
 struct CurrencyRateCardView: View {
     let currency: Currency
     
+    let rate: Double
+    
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
@@ -24,7 +26,7 @@ struct CurrencyRateCardView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             
             VStack(alignment: .trailing) {
-                Text(currency.rate.toString())
+                Text(rate.toString())
                     .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.white)
             }
@@ -52,6 +54,6 @@ struct CurrencyRateCardView: View {
 struct CurrencyView_Previews: PreviewProvider {
     static var previews: some View {
         let currencyRate = Currency(code: "USD", name: "American Dollar", rate: 1)
-        CurrencyRateCardView(currency: currencyRate)
+        CurrencyRateCardView(currency: currencyRate, rate: 1)
     }
 }

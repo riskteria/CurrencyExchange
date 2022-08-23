@@ -35,7 +35,7 @@ final class MainViewModel: ObservableObject {
     
     @Published var baseCurrency = "USD"
     
-    @Published var baseValue = "1"
+    @Published var baseValue = "1.00"
     
     @Published var isFetching = true
     
@@ -111,6 +111,14 @@ final class MainViewModel: ObservableObject {
         } catch {
             print("error: ", error.localizedDescription)
         }
+    }
+    
+    func getAdjustedRate(from currency: Currency) -> Double {
+        let baseValue = Double(self.baseValue) ?? 0
+        let baseRate = rates[baseCurrency] ?? 0
+        let targetRate = currency.rate
+        
+        return baseValue * targetRate / baseRate
     }
 }
 

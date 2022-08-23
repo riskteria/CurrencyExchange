@@ -78,7 +78,10 @@ struct MainView: View {
             VStack(alignment: .leading) {
                 LazyVStack(alignment: .leading) {
                     ForEach(viewModel.displayCurrencies, id: \.self) { currency in
-                        CurrencyRateCardView(currency: currency)
+                        CurrencyRateCardView(
+                            currency: currency,
+                            rate: viewModel.getAdjustedRate(from: currency)
+                        )
                     }
                 }
             }
