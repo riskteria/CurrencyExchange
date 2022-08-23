@@ -21,6 +21,6 @@ final class CurrencyEntity: NSManagedObject {
 
 }
 
-extension CurrencyEntity : Identifiable {
+extension CurrencyEntity: Identifiable {
 
 }

@@ -42,7 +42,6 @@ struct MainView: View {
                 }
                 .sheet(isPresented: $viewModel.isCurrencySelectionModalActive) {
                     CurrencySelectionView(
-                        selection: .single,
                         currencies: $viewModel.currencies
                     )
                 }
@@ -97,11 +96,11 @@ struct MainView: View {
                         ToolbarItem {
                             Button("Add", action: viewModel.toggleCurrencySelectionModal)
                                 .sheet(isPresented: $viewModel.isCurrencySelectionModalActive) {
-                                    CurrencySelectionView(
-                                        selection: .multiple,
+                                    SwitchCurrencyView(
                                         currencies: $viewModel.currencies
                                     )
                                 }
+                                .foregroundColor(.red)
                         }
                     }
                 }
@@ -112,6 +111,7 @@ struct MainView: View {
                 }
             })
             .navigationTitle("Converter")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  CurrencySelectionView.swift
+//  SwitchCurrencyView.swift
 //  CurrencyExchange
 //
 //  Created by Rizky Hasibuan on 18/08/22.
@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct CurrencySelectionView: View {
+struct SwitchCurrencyView: View {
     // MARK: - Private Properties
     
-    @State private var selectedCurrencies: [String: Bool] = [:]
+    @State private var selected: CurrencyEntity?
     
     // MARK: - Public Properties
     
@@ -23,10 +23,10 @@ struct CurrencySelectionView: View {
             List(currencies, id: \.self) { currency in
                 CurrencyItemView(currency: currency, selected: isSelected(currency: currency))
                     .onTapGesture {
-                        handleSelection(currency: currency)
+                        selected = currency
                     }
             }
-            .navigationTitle("Select Currencies")
+            .navigationTitle("Switch Currency")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -42,25 +42,15 @@ struct CurrencySelectionView: View {
         }
     }
     
+    private func isSelected(currency: CurrencyEntity) -> Bool {
+        return selected?.code == currency.code
+    }
+    
     private func cancelHandler() {
         presentationMode.wrappedValue.dismiss()
     }
     
     private func doneHandler() {
         presentationMode.wrappedValue.dismiss()
-    }
-    
-    private func isSelected(currency: CurrencyEntity) -> Bool {
-        return selectedCurrencies[currency.code!] ?? currency.show
-    }
-    
-    private func handleSelection(currency: CurrencyEntity) {
-        guard let code = currency.code else { return }
-        
-        if selectedCurrencies[code] == nil {
-            selectedCurrencies[code] = true
-        } else {
-            selectedCurrencies[code]?.toggle()
-        }
     }
 }
