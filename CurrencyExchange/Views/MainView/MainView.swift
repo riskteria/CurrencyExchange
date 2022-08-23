@@ -31,28 +31,31 @@ struct MainView: View {
                 }
             }
             
-            HStack(spacing: 16) {
-                Button {
-                    viewModel.presentSwitchCurrency.toggle()
-                } label: {
-                    Text(viewModel.baseCurrency)
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(.primary)
-                    Text("▼")
-                        .font(.system(size: 12))
-                        .foregroundColor(.gray)
+            VStack {
+                HStack(spacing: 16) {
+                    Button {
+                        viewModel.presentSwitchCurrency.toggle()
+                    } label: {
+                        Text(viewModel.baseCurrency)
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.primary)
+                        Text("▼")
+                            .font(.system(size: 12))
+                            .foregroundColor(.gray)
+                    }
+                    .sheet(isPresented: $viewModel.presentSwitchCurrency, onDismiss: viewModel.handleSwitchCurrency) {
+                        CurrencySelectionView(
+                            selection: .single,
+                            currencies: $viewModel.currencies,
+                            selected: $viewModel.selectedCurrencies
+                        )
+                    }
+                    
+                    TextField("0.00", text: $viewModel.baseValue)
+                        .padding(.horizontal)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
                 }
-                .sheet(isPresented: $viewModel.presentSwitchCurrency, onDismiss: viewModel.handleSwitchCurrency) {
-                    CurrencySelectionView(
-                        selection: .single,
-                        currencies: $viewModel.currencies,
-                        selected: $viewModel.selectedCurrencies
-                    )
-                }
-                TextField("0.00", text: $viewModel.baseValue)
-                    .padding(.horizontal)
-                    .keyboardType(.decimalPad)
-                    .multilineTextAlignment(.trailing)
             }
             .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
             .background(Color("LightColor"))
