@@ -57,7 +57,13 @@ struct CurrencySelectionView: View {
     }
     
     private func isSelected(currency: CurrencyEntity) -> Bool {
-        return selectedCurrencies[currency.code!] ?? currency.show
+        switch selection {
+        case .single:
+            return selectedCurrencies[currency.code!] ?? false
+        case .multiple:
+            return selectedCurrencies[currency.code!] ?? currency.show
+        }
+        
     }
     
     private func handleSelection(currency: CurrencyEntity) {
