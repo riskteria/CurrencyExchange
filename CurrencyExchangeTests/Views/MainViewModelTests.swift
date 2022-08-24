@@ -37,11 +37,31 @@ class MainViewModelTests: XCTestCase {
         XCTAssertTrue(shouldFetch)
     }
     
-    func testFetchCurrencies() async {
+    func testFetchData() async {
         await sut.fetchData()
         
         let currencies = sut.currencies
+        let rates = sut.rates
         
+        XCTAssertFalse(rates.isEmpty)
         XCTAssertFalse(currencies.isEmpty)
+    }
+    
+    func testGetAdjustedRate() async {
+        let rateValue = 14484.67
+        await sut.fetchData()
+        
+        sut.baseCurrency = "USD"
+        sut.baseValue = "1"
+        
+        let currency = Currency(
+            code: "IDR",
+            name: "Indonesian Rupiah",
+            rate: rateValue
+        )
+        
+        let result = sut.getAdjustedRate(from: currency)
+        
+        XCTAssertTrue(result == rateValue)
     }
 }
