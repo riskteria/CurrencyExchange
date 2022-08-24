@@ -9,14 +9,9 @@ import SwiftUI
 
 @main
 struct CurrencyExchangeApp: App {
-    var RootView: some View {
-        let viewModel = MainViewModel()
-        return MainView(viewModel: viewModel)
-    }
-
     var body: some Scene {
         WindowGroup {
-            RootView
+            MainView()
         }
     }
 }

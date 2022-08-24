@@ -13,9 +13,9 @@ import SwiftUI
 final class MainViewModel: ObservableObject {
     // MARK: - Private Properties
     
-    private let currencyAPI = CurrencyAPI()
+    private let currencyAPI: CurrencyAPIInterface
     
-    private let persistanceController = PersistenceController.shared
+    private let container: NSPersistentContainer
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -43,7 +43,12 @@ final class MainViewModel: ObservableObject {
     
     @Published var presentSwitchCurrency = false
     
-    init() {
+    init(
+        service: CurrencyAPIInterface,
+        container: NSPersistentContainer
+    ) {
+        self.currencyAPI = service
+        self.container = container
         setupSubscribers()
     }
     
@@ -61,20 +66,6 @@ final class MainViewModel: ObservableObject {
         }
     }
     
-    func toggleCurrencySelectionModal() {
-        presentEditCurrency.toggle()
-    }
-    
-    func filterNumbersFromField(value: String) {
-        if value.isNumber {
-            baseValue = value
-        }
-    }
-    
-    func onFieldSubmitted() {
-        
-    }
-    
     func onTimerExpired() {
         Task {
             await fetchRemoteRates()
@@ -90,7 +81,7 @@ final class MainViewModel: ObservableObject {
         do {
             let codes = Array(selectedCurrencies.keys)
             
-            let context = persistanceController.container.viewContext
+            let context = container.viewContext
             let request = CurrencyEntity.fetchRequest()
             
             let predicase = NSPredicate(format: "code in %@", codes)
@@ -119,6 +110,44 @@ final class MainViewModel: ObservableObject {
         let targetRate = currency.rate
         
         return baseValue * targetRate / baseRate
+    }
+    
+    func shouldFetchCurrencyFromRemote() -> Bool {
+        let context = container.viewContext
+        let request = CurrencyEntity.fetchRequest()
+        
+        do {
+            let count = try context.count(for: request)
+            return count == 0
+        } catch {
+            return true
+        }
+    }
+    
+    func shouldFetchRatesFromRemote() -> Bool {
+        let context = container.viewContext
+        let request = LatestRateEntity.fetchRequest()
+        
+        do {
+            let count = try context.count(for: request)
+            
+            if count == 0 {
+                return true
+            }
+            
+            let latestRate = try context.fetch(request)
+
+            guard let latestFetchDate = latestRate.first?.timestamp,
+                  isExpired(date: latestFetchDate)
+            else {
+                return false
+            }
+            
+            return true
+            
+        } catch {
+            return true
+        }
     }
 }
 
@@ -159,44 +188,6 @@ private extension MainViewModel {
         return false
     }
     
-    func shouldFetchCurrencyFromRemote() -> Bool {
-        let context = persistanceController.container.viewContext
-        let request = CurrencyEntity.fetchRequest()
-        
-        do {
-            let count = try context.count(for: request)
-            return count == 0
-        } catch {
-            return true
-        }
-    }
-    
-    func shouldFetchRatesFromRemote() -> Bool {
-        let context = persistanceController.container.viewContext
-        let request = LatestRateEntity.fetchRequest()
-        
-        do {
-            let count = try context.count(for: request)
-            
-            if count == 0 {
-                return true
-            }
-            
-            let latestRate = try context.fetch(request)
-
-            guard let latestFetchDate = latestRate.first?.timestamp,
-                  isExpired(date: latestFetchDate)
-            else {
-                return false
-            }
-            
-            return true
-            
-        } catch {
-            return true
-        }
-    }
-    
     func fetchRemoteRates() async {
         DispatchQueue.main.async { [weak self] in
             self?.isFetching = true
@@ -205,8 +196,7 @@ private extension MainViewModel {
         do {
             
             let latestRates = try await currencyAPI.fetchLatest()
-            let context = persistanceController.container.viewContext
-            
+            let context = container.viewContext
             let request = LatestRateEntity.fetchRequest()
             let count = try context.count(for: request)
             
@@ -240,8 +230,7 @@ private extension MainViewModel {
         
         do {
             let currencies = try await currencyAPI.fetchCurrencies() ?? [:]
-            let context = persistanceController.container.viewContext
-            
+            let context = container.viewContext
             for (code, name) in currencies {
                 let entity = CurrencyEntity(context: context)
                 entity.code = code
@@ -272,7 +261,7 @@ private extension MainViewModel {
             self?.isFetching = true
         }
         
-        let context = persistanceController.container.viewContext
+        let context = container.viewContext
         let request = CurrencyEntity.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "code", ascending: true)]
         
@@ -295,7 +284,7 @@ private extension MainViewModel {
             self?.isFetching = true
         }
         
-        let context = persistanceController.container.viewContext
+        let context = container.viewContext
         let request = LatestRateEntity.fetchRequest()
         
         do {

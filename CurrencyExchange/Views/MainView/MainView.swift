@@ -8,7 +8,13 @@
 import SwiftUI
 
 struct MainView: View {
-    @ObservedObject var viewModel: MainViewModel
+    @ObservedObject private var viewModel: MainViewModel
+    
+    init() {
+        let service = CurrencyAPI()
+        let container = PersistenceController.shared.container
+        viewModel = MainViewModel(service: service, container: container)
+    }
     
     var HeaderView: some View {
         VStack(alignment: .leading) {
@@ -38,7 +44,7 @@ struct MainView: View {
                     } label: {
                         Text(viewModel.baseCurrency)
                             .font(.system(size: 16, weight: .bold))
-                            .foregroundColor(.primary)
+                            .foregroundColor(.gray)
                         Text("▼")
                             .font(.system(size: 12))
                             .foregroundColor(.gray)
@@ -54,6 +60,7 @@ struct MainView: View {
                     TextField("0.00", text: $viewModel.baseValue)
                         .padding(.horizontal)
                         .keyboardType(.decimalPad)
+                        .foregroundColor(.gray)
                         .multilineTextAlignment(.trailing)
                 }
             }
@@ -126,13 +133,13 @@ struct MainView: View {
             })
             .navigationTitle("Converter")
             .navigationBarTitleDisplayMode(.inline)
+            .preferredColorScheme(.dark)
         }
     }
 }
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        let viewModel = MainViewModel()
-        MainView(viewModel: viewModel)
+        MainView()
     }
 }

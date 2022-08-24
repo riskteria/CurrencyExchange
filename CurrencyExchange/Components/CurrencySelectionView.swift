@@ -35,6 +35,7 @@ struct CurrencySelectionView: View {
             }
             .navigationTitle("Select Currency")
             .navigationBarTitleDisplayMode(.inline)
+            .preferredColorScheme(.dark)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel", action: cancelHandler)

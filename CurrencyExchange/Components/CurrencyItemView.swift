@@ -22,7 +22,7 @@ struct CurrencyItemView: View {
                 .lineLimit(1)
                 .font(.system(size: 14))
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(.white)
+                .background(.clear)
                 .foregroundColor(selected ? .red : .primary)
             
             Text(selected ? "✓" : " ")
