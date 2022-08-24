@@ -20,7 +20,7 @@ class MockAPIService: CurrencyAPIInterface {
             
             let latestRate = try decoder.decode(CurrencyRates.self, from: jsonData)
             
-            print(latestRate)
+            print("latest ratex: ", latestRate)
             
             return latestRate
         } catch {
@@ -31,7 +31,7 @@ class MockAPIService: CurrencyAPIInterface {
     
     func fetchCurrencies() async throws -> [String : String]? {
         do {
-            guard let jsonData = loadFile(name: "currencies")
+            guard let jsonData = loadFile(name: "currencies_stub")
             else {
                 return nil
             }

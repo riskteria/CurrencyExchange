@@ -36,4 +36,12 @@ class MainViewModelTests: XCTestCase {
         let shouldFetch = sut.shouldFetchRatesFromRemote()
         XCTAssertTrue(shouldFetch)
     }
+    
+    func testFetchCurrencies() async {
+        await sut.fetchData()
+        
+        let currencies = sut.currencies
+        
+        XCTAssertFalse(currencies.isEmpty)
+    }
 }
