@@ -2,7 +2,7 @@
 //  CurrencyExchangeApp.swift
 //  CurrencyExchange
 //
-//  Created by Rizky Hasibuan on 17/08/22.
+//  Created by Rizky Hasibuan on 18/08/22.
 //
 
 import SwiftUI
